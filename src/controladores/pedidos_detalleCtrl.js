@@ -26,24 +26,31 @@ async (req,res)=>{
     }
 }/*get para seleccionar*/
 
-export const postPedidos_detalle=
-async (req,res)=>{
-try {
-    //console.log(req.body)
-    const {prod_id, ped_id, det_cantidad, det_precio}=req.body
-    //console.log(cli_nombre)   
-    const [rows]=await conmysql.query('insert into pedidos_detalle (prod_id, ped_id, det_cantidad, det_precio) values(?,?,?,?)',
-        [prod_id, ped_id, det_cantidad, det_precio])
-        //EJEMPLO: const [rows]=await conmysql.query('insert  into table(cam1,cam2) values(?,?)',[cli_nombre,cli_correo])
-    res.send({
-        id:rows.insertId
-    })
-    
-} catch (error) {
-    return res.status(500).json({message:'error del lado del servidor'})
-}
+export const postPedidos_detalle = async (req, res) => {
+  try {
+    const detalles = req.body; // Suponiendo que req.body es un array de objetos detalle
 
-}/*post es para crear*/
+    // Valida que detalles sea un array
+    if (!Array.isArray(detalles) || detalles.length === 0) {
+      return res.status(400).json({ message: 'Detalles no válidos' });
+    }
+
+    // Ejecuta la inserción para cada detalle en la lista
+    for (const detalle of detalles) {
+      const { prod_id, ped_id, det_cantidad, det_precio } = detalle;
+
+      await conmysql.query(
+        'INSERT INTO pedidos_detalle (prod_id, ped_id, det_cantidad, det_precio) VALUES (?, ?, ?, ?)',
+        [prod_id, ped_id, det_cantidad, det_precio]
+      );
+    }
+
+    res.send({ message: 'Detalles guardados con éxito' });
+  } catch (error) {
+    console.error('Error del lado del servidor:', error);
+    return res.status(500).json({ message: 'Error del lado del servidor' });
+  }
+};
 
 export const putPedidos_detalle= 
 async (req,res)=>{
