@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../config.js';
 
 // Veriifcacion del Token
-export const verifyToken = (req, res, next) => {
+/*export const verifyToken = (req, res, next) => {
     const token = req.headers['authorization'];
     if (!token) return res.status(403).json({ message: 'Token no proporcionado' });
 
@@ -11,4 +11,4 @@ export const verifyToken = (req, res, next) => {
         req.userId = decoded.id;
         next();
     });
-};
+};*/
